@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnackLotl</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <!-- Başlangıç Ekranı -->
+      <div id="start-screen" class="screen">
+        <h1 class="title">SnackLotl</h1>
+        <p class="subtitle">An underwater axolotl food journey</p>
+        <p class="instruction">Press SPACE to learn how to play SnackLotl!</p>
+        <span class="credit">Created by Hülya Ceren Lüleci</span>
+      </div>
+
+      <!-- Nasıl Oynanır Ekranı -->
+      <div id="how-to-play-screen" class="screen hidden">
+        <h2 class="section-title">HOW TO PLAY</h2>
+        <div class="instructions-grid">
+          <div class="instruction-item">
+            <img src="assets/axolotl_1.png" alt="Axolotl" />
+            <p>Use A / D or Left / Right arrow keys to move</p>
+          </div>
+          <div class="instruction-item">
+            <img src="assets/food_shrimp.png" alt="Shrimp" />
+            <p>+1 point</p>
+          </div>
+          <div class="instruction-item">
+            <img src="assets/food_fish.png" alt="Fish" />
+            <p>+1 point</p>
+          </div>
+          <div class="instruction-item">
+            <img src="assets/food_toxin.png" alt="Toxin" />
+            <p>-1 life!</p>
+          </div>
+        </div>
+        <p class="summary-text">Collect snacks. Avoid toxins.</p>
+        <p class="prompt-text">Press SPACE to START</p>
+        <span class="credit">Created by Hülya Ceren Lüleci</span>
+      </div>
+
+      <!-- Oyun Ekranı -->
+      <div id="game-screen" class="screen hidden">
+        <div id="ui-overlay">
+          <div id="score-display">Score: 0</div>
+          <div id="lives-display">Lives: 3</div>
+          <div id="highscore-display">High Score: 0</div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <span class="credit">Created by Hülya Ceren Lüleci</span>
+      </div>
+
+      <!-- Game Over Ekranı -->
+      <div id="game-over-screen" class="screen hidden">
+        <h2 class="game-over-title">GAME OVER</h2>
+        <p id="final-score">Final Score: 0</p>
+        <p id="game-over-highscore">High Score: 0</p>
+        <p class="restart-prompt">Press R to Restart or Q to Quit</p>
+        <span class="credit">Created by Hülya Ceren Lüleci</span>
+      </div>
+    </div>
+
+    <!-- Arka plan müziği -->
+    <audio id="bg-music" src="assets/music.ogg" loop></audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
