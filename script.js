@@ -38,12 +38,18 @@ function updateMuteBtn() {
   muteBtn.textContent = isMuted ? "🔇" : "🔊";
 }
 updateMuteBtn();
-muteBtn.addEventListener("click", () => {
+
+function toggleMute(e) {
+  e.preventDefault();
+  e.stopPropagation();
   isMuted = !isMuted;
   bgMusic.volume = isMuted ? 0 : DEFAULT_VOLUME;
   localStorage.setItem(MUTE_KEY, isMuted);
   updateMuteBtn();
-});
+}
+
+muteBtn.addEventListener("click", toggleMute);
+muteBtn.addEventListener("touchend", toggleMute);
 
 // Oyun Sınıfları
 class Player {
