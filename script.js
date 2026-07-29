@@ -25,7 +25,22 @@ assets.fish.src = "assets/food_fish.png";
 assets.toxin.src = "assets/food_toxin.png";
 
 const bgMusic = document.getElementById("bg-music");
-bgMusic.volume = 1.0;
+const MUTE_KEY = "snacklotl_muted";
+const DEFAULT_VOLUME = 0.2; // eski değer 1.0 (max ses) çok yüksekti, düşürüldü
+let isMuted = localStorage.getItem(MUTE_KEY) === "true";
+bgMusic.volume = isMuted ? 0 : DEFAULT_VOLUME;
+
+const muteBtn = document.getElementById("mute-btn");
+function updateMuteBtn() {
+  muteBtn.textContent = isMuted ? "🔇" : "🔊";
+}
+updateMuteBtn();
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+  bgMusic.volume = isMuted ? 0 : DEFAULT_VOLUME;
+  localStorage.setItem(MUTE_KEY, isMuted);
+  updateMuteBtn();
+});
 
 // Oyun Sınıfları
 class Player {
@@ -136,6 +151,18 @@ let highscore = localStorage.getItem(HIGHSCORE_KEY) || 0;
 let lastSpeedIncreaseScore = 0;
 let spawnTimer = 0;
 
+// Responsive Ölçekleme (mobilde ekran kesilmesin diye)
+const gameContainer = document.querySelector(".game-container");
+function resizeGame() {
+  const scaleX = window.innerWidth / 1280;
+  const scaleY = window.innerHeight / 960;
+  const scale = Math.min(scaleX, scaleY) * 0.97; // %3 boşluk payı
+  gameContainer.style.transform = `scale(${scale})`;
+}
+window.addEventListener("resize", resizeGame);
+window.addEventListener("orientationchange", resizeGame);
+resizeGame();
+
 function checkCollision(rect1, rect2) {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -170,6 +197,52 @@ window.addEventListener("keydown", (e) => {
 
 window.addEventListener("keyup", (e) => {
   keys[e.code] = false;
+});
+
+// Dokunmatik (Touch) Kontroller — mobil için
+function getCanvasX(clientX) {
+  const rect = canvas.getBoundingClientRect();
+  const relativeX = clientX - rect.left;
+  return (relativeX / rect.width) * WIDTH;
+}
+
+function handleTouchMove(e) {
+  if (gameState !== "PLAYING") return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  if (!touch) return;
+  const targetX = getCanvasX(touch.clientX);
+  player.x = Math.max(
+    player.size / 2,
+    Math.min(WIDTH - player.size / 2, targetX),
+  );
+}
+
+canvas.addEventListener("touchstart", handleTouchMove, { passive: false });
+canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+// Ekranlara dokunarak ilerleme (SPACE'e alternatif)
+document.getElementById("start-screen").addEventListener("click", () => {
+  if (gameState === "START") {
+    gameState = "HOWTOPLAY";
+    switchScreen("how-to-play-screen");
+  }
+});
+
+document.getElementById("how-to-play-screen").addEventListener("click", () => {
+  if (gameState === "HOWTOPLAY") {
+    startGame();
+  }
+});
+
+document.getElementById("restart-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  startGame();
+});
+
+document.getElementById("quit-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  location.reload();
 });
 
 function switchScreen(screenId) {

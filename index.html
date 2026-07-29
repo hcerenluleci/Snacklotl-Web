@@ -5,20 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SnackLotl</title>
     <link rel="stylesheet" href="style.css" />
-    
+
     <!-- Vercel Web Analytics -->
     <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <div class="game-container">
+      <button id="mute-btn" aria-label="Toggle sound">🔊</button>
+
       <!-- Başlangıç Ekranı -->
       <div id="start-screen" class="screen">
         <h1 class="title">SnackLotl</h1>
         <p class="subtitle">An underwater axolotl food journey</p>
         <p class="instruction">Press SPACE to learn how to play SnackLotl!</p>
+        <p class="tap-hint">(or tap the screen)</p>
         <span class="credit">Created by Hülya Ceren Lüleci</span>
       </div>
 
@@ -28,7 +35,7 @@
         <div class="instructions-grid">
           <div class="instruction-item">
             <img src="assets/axolotl_1.png" alt="Axolotl" />
-            <p>Use A / D or Left / Right arrow keys to move</p>
+            <p>Use A / D, arrow keys, or drag your finger to move</p>
           </div>
           <div class="instruction-item">
             <img src="assets/food_shrimp.png" alt="Shrimp" />
@@ -44,7 +51,7 @@
           </div>
         </div>
         <p class="summary-text">Collect snacks. Avoid toxins.</p>
-        <p class="prompt-text">Press SPACE to START</p>
+        <p class="prompt-text">Press SPACE or tap to START</p>
         <span class="credit">Created by Hülya Ceren Lüleci</span>
       </div>
 
@@ -65,6 +72,10 @@
         <p id="final-score">Final Score: 0</p>
         <p id="game-over-highscore">High Score: 0</p>
         <p class="restart-prompt">Press R to Restart or Q to Quit</p>
+        <div class="game-over-buttons">
+          <button id="restart-btn" class="game-btn">Restart</button>
+          <button id="quit-btn" class="game-btn">Quit</button>
+        </div>
         <span class="credit">Created by Hülya Ceren Lüleci</span>
       </div>
     </div>
