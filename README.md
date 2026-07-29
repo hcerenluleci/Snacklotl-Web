@@ -45,4 +45,4 @@ Check out the live game deployed on Vercel:
 
 **Hülya Ceren Lüleci**
 
-- GitHub: [@hcerenluleci](https://www.google.com/search?q=https://github.com/hcerenluleci)
+- GitHub: [@hcerenluleci](https://snacklotl.vercel.app/)

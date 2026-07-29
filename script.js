@@ -154,13 +154,22 @@ let spawnTimer = 0;
 // Responsive Ölçekleme (mobilde ekran kesilmesin diye)
 const gameContainer = document.querySelector(".game-container");
 function resizeGame() {
-  const scaleX = window.innerWidth / 1280;
-  const scaleY = window.innerHeight / 960;
+  const vw = window.visualViewport
+    ? window.visualViewport.width
+    : window.innerWidth;
+  const vh = window.visualViewport
+    ? window.visualViewport.height
+    : window.innerHeight;
+  const scaleX = vw / 1280;
+  const scaleY = vh / 960;
   const scale = Math.min(scaleX, scaleY) * 0.97; // %3 boşluk payı
   gameContainer.style.transform = `scale(${scale})`;
 }
 window.addEventListener("resize", resizeGame);
-window.addEventListener("orientationchange", resizeGame);
+window.addEventListener("orientationchange", () => setTimeout(resizeGame, 150));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", resizeGame);
+}
 resizeGame();
 
 function checkCollision(rect1, rect2) {
