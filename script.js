@@ -3,6 +3,9 @@ const ctx = canvas.getContext("2d");
 
 const WIDTH = 800;
 const HEIGHT = 600;
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+
 const FOOD_TYPES = ["shrimp", "fish", "toxin"];
 const HIGHSCORE_KEY = "snacklotl_highscore";
 
@@ -26,7 +29,7 @@ assets.toxin.src = "assets/food_toxin.png";
 
 const bgMusic = document.getElementById("bg-music");
 const MUTE_KEY = "snacklotl_muted";
-const DEFAULT_VOLUME = 0.2; // eski değer 1.0 (max ses) çok yüksekti, düşürüldü
+const DEFAULT_VOLUME = 0.2;
 let isMuted = localStorage.getItem(MUTE_KEY) === "true";
 bgMusic.volume = isMuted ? 0 : DEFAULT_VOLUME;
 
@@ -141,7 +144,7 @@ class FoodItem {
 }
 
 // Oyun Durumları
-let gameState = "START"; // START, HOWTOPLAY, PLAYING, GAMEOVER
+let gameState = "START";
 let player = new Player(WIDTH / 2, HEIGHT - 80, 160);
 let foods = [];
 let score = 0;
@@ -150,27 +153,6 @@ let speed = 5;
 let highscore = localStorage.getItem(HIGHSCORE_KEY) || 0;
 let lastSpeedIncreaseScore = 0;
 let spawnTimer = 0;
-
-// Responsive Ölçekleme (mobilde ekran kesilmesin diye)
-const gameContainer = document.querySelector(".game-container");
-function resizeGame() {
-  const vw = window.visualViewport
-    ? window.visualViewport.width
-    : window.innerWidth;
-  const vh = window.visualViewport
-    ? window.visualViewport.height
-    : window.innerHeight;
-  const scaleX = vw / 1280;
-  const scaleY = vh / 960;
-  const scale = Math.min(scaleX, scaleY) * 0.97; // %3 boşluk payı
-  gameContainer.style.transform = `scale(${scale})`;
-}
-window.addEventListener("resize", resizeGame);
-window.addEventListener("orientationchange", () => setTimeout(resizeGame, 150));
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", resizeGame);
-}
-resizeGame();
 
 function checkCollision(rect1, rect2) {
   return (
@@ -208,7 +190,7 @@ window.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
-// Dokunmatik (Touch) Kontroller — mobil için
+// Dokunmatik (Touch) Kontroller — mobil için kusursuz oranlama
 function getCanvasX(clientX) {
   const rect = canvas.getBoundingClientRect();
   const relativeX = clientX - rect.left;
@@ -230,7 +212,7 @@ function handleTouchMove(e) {
 canvas.addEventListener("touchstart", handleTouchMove, { passive: false });
 canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
 
-// Ekranlara dokunarak ilerleme (SPACE'e alternatif)
+// Ekranlara dokunarak ilerleme
 document.getElementById("start-screen").addEventListener("click", () => {
   if (gameState === "START") {
     gameState = "HOWTOPLAY";
@@ -274,10 +256,9 @@ function startGame() {
   bgMusic.play().catch(() => {});
 }
 
-// Oyun Döngüsü (Game Loop)
+// Oyun Döngüsü
 function update() {
   if (gameState === "PLAYING") {
-    // Oyuncu Hareketi
     if (keys["ArrowLeft"] || keys["KeyA"]) {
       player.move(-10);
     }
@@ -285,13 +266,11 @@ function update() {
       player.move(10);
     }
 
-    // Hız Artışı
     if (Math.floor(score / 10) > lastSpeedIncreaseScore) {
       speed += 0.5;
       lastSpeedIncreaseScore = Math.floor(score / 10);
     }
 
-    // Yemek Oluşturma
     spawnTimer++;
     if (spawnTimer > 60) {
       const fType = FOOD_TYPES[Math.floor(Math.random() * FOOD_TYPES.length)];
@@ -301,12 +280,10 @@ function update() {
       spawnTimer = 0;
     }
 
-    // Yemekleri Güncelle
     for (let i = foods.length - 1; i >= 0; i--) {
       foods[i].speed = speed;
       foods[i].fall();
 
-      // Çarpışma Kontrolü
       if (checkCollision(player.getRect(), foods[i].getRect())) {
         if (foods[i].type === "toxin") {
           lives--;
@@ -340,11 +317,9 @@ function draw() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
   if (gameState === "PLAYING") {
-    // Oyun içi çizimler
     player.draw();
     foods.forEach((f) => f.draw());
 
-    // UI Güncelleme
     document.getElementById("score-display").innerText = `Score: ${score}`;
     document.getElementById("lives-display").innerText = `Lives: ${lives}`;
     document.getElementById("highscore-display").innerText =
